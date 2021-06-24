@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PercentBar
 {
-    class ConsolePos
+    public class ConsolePos
     {
         public int x;
         public int y;
@@ -20,7 +20,7 @@ namespace PercentBar
         }
     }
 
-    struct Style
+    public struct Style
     {
         public char BackgroundEmpty { get; private set; }
         public char BackgroundFilled { get; private set; }
@@ -55,7 +55,7 @@ namespace PercentBar
         }
     }
 
-    static class Utils
+    public static class Utils
     {
         /// <summary>
         /// Set the colours of the console
@@ -78,7 +78,7 @@ namespace PercentBar
         }
     }
 
-    class ProgressBar
+    public class ProgressBar
     {
         private readonly float maxValue;
         private readonly ConsolePos position;
@@ -175,7 +175,7 @@ namespace PercentBar
 
 namespace PercentBar.Styles
 {
-    static class BuiltInStyles
+    public static class BuiltInStyles
     {
         public static Style Style1 { get; } = new Style('\u2591', '\u2588', true, ConsoleColor.White, ConsoleColor.Gray, ConsoleColor.Black, ConsoleColor.Black, false);
         public static Style Style2 { get; } = new Style(' ', '\u2588', true, ConsoleColor.White, ConsoleColor.Gray, ConsoleColor.Black, ConsoleColor.Black, false);

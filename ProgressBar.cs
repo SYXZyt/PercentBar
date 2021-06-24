@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PercentBar
 {
-    struct ConsolePos
+    class ConsolePos
     {
         public int x;
         public int y;
@@ -55,12 +55,34 @@ namespace PercentBar
         }
     }
 
+    static class Utils
+    {
+        /// <summary>
+        /// Set the colours of the console
+        /// </summary>
+        /// <param name="colour1">Foreground colour</param>
+        /// <param name="colour2">Background colour</param>
+        public static void SetColour(ConsoleColor colour1, ConsoleColor colour2)
+        {
+            Console.ForegroundColor = colour1;
+            Console.BackgroundColor = colour2;
+        }
+
+        /// <summary>
+        /// Does Console.SetCursorPosition, but takes a ConsolePos instead
+        /// </summary>
+        /// <param name="newPosition">Where to move the cursor to</param>
+        public static void SetCursorPosition(ConsolePos newPosition)
+        {
+            Console.SetCursorPosition(newPosition.x, newPosition.y);
+        }
+    }
+
     class ProgressBar
     {
         private readonly float maxValue;
         private readonly ConsolePos position;
         private readonly byte length;
-        private ConsolePos lastEndPosition;
 
         /// <summary>
         /// What style this progress bar uses
@@ -70,17 +92,6 @@ namespace PercentBar
         /// Current percentage of the progress bar
         /// </summary>
         public float Percentage { get; protected set; }
-
-        /// <summary>
-        /// Set the colours of the console
-        /// </summary>
-        /// <param name="colour1">Foreground colour</param>
-        /// <param name="colour2">Background colour</param>
-        private void SetColour(ConsoleColor colour1, ConsoleColor colour2)
-        {
-            Console.ForegroundColor = colour1;
-            Console.BackgroundColor = colour2;
-        }
 
         /// <summary>
         /// Forces the percentage to a specific value
@@ -108,38 +119,38 @@ namespace PercentBar
             ConsoleColor frg = Console.ForegroundColor;
             ConsoleColor bkg = Console.BackgroundColor;
 
-            Console.SetCursorPosition(position.x, position.y);
+            Utils.SetCursorPosition(position);
             Console.Write('[');
             int progress = (int)(Percentage / length);
 
             //Set the colour and draw the progress chars
-            SetColour(Style.ForegroundColourFilled, Style.BackgroundColourFilled);
+            Utils.SetColour(Style.ForegroundColourFilled, Style.BackgroundColourFilled);
             for (int u = 0; u < progress; u++)
             {
                 Console.Write(Style.BackgroundFilled);
             }
 
             //Draw unfilled chars
-            SetColour(Style.ForegroundColourEmpty, Style.BackgroundColourEmpty);
+            Utils.SetColour(Style.ForegroundColourEmpty, Style.BackgroundColourEmpty);
             for (int f = progress; f < length; f++)
             {
                 Console.Write(Style.BackgroundEmpty);
             }
 
             //Set back to original colour
-            SetColour(frg, bkg);
+            Utils.SetColour(frg, bkg);
 
             Console.Write(']');
-
+            
             if (Style.ShowPercent)
             {
                 if (Style.PercentRounded)
                 {
-                    Console.WriteLine($" {Math.Round(Percentage, 0)}%");
+                    Console.Write($" {Math.Round(Percentage, 0)}%   ");
                 }
                 else
                 {
-                    Console.WriteLine($" {Math.Round(Percentage, 2)}%");
+                    Console.Write($" {Math.Round(Percentage, 2)}%   ");
                 }
             }
         }

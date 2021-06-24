@@ -29,6 +29,7 @@ namespace PercentBar
         public ConsoleColor ForegroundColourEmpty { get; private set; }
         public ConsoleColor BackgroundColourFilled { get; private set; }
         public ConsoleColor BackgroundColourEmpty { get; private set; }
+        public bool PercentRounded { get; private set; }
 
         /// <summary>
         /// Create a style that can be used by a progress bar
@@ -40,7 +41,8 @@ namespace PercentBar
         /// <param name="foregroundColourEmpty">Colour of the empty tile</param>
         /// <param name="backgroundColourFilled">Background colour of filled tile</param>
         /// <param name="backgroundColourEmpty">Background colour of empty tile</param>
-        public Style(char backgroundEmpty, char backgroundFilled, bool showPercent, ConsoleColor foregroundColourFilled, ConsoleColor foregroundColourEmpty, ConsoleColor backgroundColourFilled, ConsoleColor backgroundColourEmpty)
+        /// <param name="percentRounded">If true, percent will be rounded into an int</param>
+        public Style(char backgroundEmpty, char backgroundFilled, bool showPercent, ConsoleColor foregroundColourFilled, ConsoleColor foregroundColourEmpty, ConsoleColor backgroundColourFilled, ConsoleColor backgroundColourEmpty, bool percentRounded)
         {
             BackgroundEmpty = backgroundEmpty;
             BackgroundFilled = backgroundFilled;
@@ -49,6 +51,7 @@ namespace PercentBar
             ForegroundColourEmpty = foregroundColourEmpty;
             BackgroundColourFilled = backgroundColourFilled;
             BackgroundColourEmpty = backgroundColourEmpty;
+            PercentRounded = percentRounded;
         }
     }
 
@@ -57,6 +60,7 @@ namespace PercentBar
         private readonly float maxValue;
         private readonly ConsolePos position;
         private readonly byte length;
+        private ConsolePos lastEndPosition;
 
         /// <summary>
         /// What style this progress bar uses
@@ -129,7 +133,14 @@ namespace PercentBar
 
             if (Style.ShowPercent)
             {
-                Console.WriteLine($" {(int)Percentage}%");
+                if (Style.PercentRounded)
+                {
+                    Console.WriteLine($" {Math.Round(Percentage, 0)}%");
+                }
+                else
+                {
+                    Console.WriteLine($" {Math.Round(Percentage, 2)}%");
+                }
             }
         }
 
@@ -155,8 +166,8 @@ namespace PercentBar.Styles
 {
     static class BuiltInStyles
     {
-        public static Style Style1 { get; } = new Style('\u2591', '\u2588', true, ConsoleColor.White, ConsoleColor.Gray, ConsoleColor.Black, ConsoleColor.Black);
-        public static Style Style2 { get; } = new Style(' ', '\u2588', true, ConsoleColor.White, ConsoleColor.Gray, ConsoleColor.Black, ConsoleColor.Black);
-        public static Style Style3 { get; } = new Style('.', '#', true, ConsoleColor.White, ConsoleColor.Gray, ConsoleColor.Black, ConsoleColor.Black);
+        public static Style Style1 { get; } = new Style('\u2591', '\u2588', true, ConsoleColor.White, ConsoleColor.Gray, ConsoleColor.Black, ConsoleColor.Black, false);
+        public static Style Style2 { get; } = new Style(' ', '\u2588', true, ConsoleColor.White, ConsoleColor.Gray, ConsoleColor.Black, ConsoleColor.Black, false);
+        public static Style Style3 { get; } = new Style('.', '#', true, ConsoleColor.White, ConsoleColor.Gray, ConsoleColor.Black, ConsoleColor.Black, true);
     }
 }
